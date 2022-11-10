@@ -51,13 +51,14 @@ async function migrateAdminPermissions() {
       ...item,
       action: migrateUids(item.action),
       subject: migrateSubject(item.subject),
-      properties: migrateProperties(item.properties),
-      conditions: isPGSQL ? JSON.stringify(item.conditions) : item.conditions,
+      properties: migrateProperties(item.properties) ?? {},
+      conditions: (isPGSQL ? JSON.stringify(item.conditions) : item.conditions) ?? [],
     }));
     const roleLinks = items.map((item) => ({
       permission_id: item.id,
       role_id: item.role,
     }));
+    migratedItems.forEach((item) => delete item.fields);
     await dbV4(resolveDestTableName(destination)).insert(migratedItems);
     await dbV4(resolveDestTableName(destinationLinks)).insert(roleLinks);
   }

@@ -10,7 +10,6 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@vscode/sqlite3": "^5.0.8",
     "dotenv": "^16.0.0",
     "knex": "^1.0.3",
     "lodash": "^4.17.21",
