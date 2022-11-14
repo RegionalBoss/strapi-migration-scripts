@@ -1,0 +1,32 @@
+{
+  "folders": [
+    {
+      "path": "v3-sql-v4-sql"
+    },
+    {
+      "path": "v3-mongodb-v3-sql"
+    }
+  ],
+  "settings": {
+    "workbench.colorCustomizations": {
+      "activityBar.activeBackground": "#f6ec5c",
+      "activityBar.background": "#f6ec5c",
+      "activityBar.foreground": "#15202b",
+      "activityBar.inactiveForeground": "#15202b99",
+      "activityBarBadge.background": "#0ab5aa",
+      "activityBarBadge.foreground": "#15202b",
+      "commandCenter.border": "#15202b99",
+      "sash.hoverBorder": "#f6ec5c",
+      "statusBar.background": "#f3e72c",
+      "statusBar.foreground": "#15202b",
+      "statusBarItem.hoverBackground": "#dfd30d",
+      "statusBarItem.remoteBackground": "#f3e72c",
+      "statusBarItem.remoteForeground": "#15202b",
+      "titleBar.activeBackground": "#f3e72c",
+      "titleBar.activeForeground": "#15202b",
+      "titleBar.inactiveBackground": "#f3e72c99",
+      "titleBar.inactiveForeground": "#15202b99"
+    },
+    "peacock.color": "#f3e72c"
+  }
+}

@@ -6,6 +6,7 @@ const { resetTableSequence } = require('./helpers/migrate');
 const { migrateItems } = require('./helpers/migrateFields');
 const { migrateUids, migrateItemValues } = require('./helpers/migrateValues');
 const { resolveSourceTableName, resolveDestTableName } = require('./helpers/tableNameHelpers');
+const { v4: uuid4 } = require('uuid');
 
 const source = 'core_store';
 const destination = 'strapi_core_store_settings';
@@ -62,16 +63,32 @@ async function migrateTables() {
           }
         : value;
 
+      const _key = migrateUids(item.key);
+
+      const CHECK_KEY =
+        'plugin_@cleverlance-enterprise-solutions/strapi-plugin-make-deploy_settings';
+
       return {
-        key: migrateUids(item.key),
-        value: JSON.stringify(valueToSave),
+        key:
+          _key === 'plugin_make-deploy_settings'
+            ? undefined
+            : _key === CHECK_KEY
+            ? 'plugin_make-deploy_settings'
+            : _key,
+        value: JSON.stringify(
+          _key === CHECK_KEY && Array.isArray(valueToSave)
+            ? valueToSave.map((val) => ({ ...val, id: uuid4() }))
+            : valueToSave
+        ),
         type: item.type,
-        environment: item.environment ? item.environment : null,
+        environment: item.environment && _key !== CHECK_KEY ? item.environment : null,
         tag: item.tag ? item.tag : null,
       };
     });
 
-    await dbV4(resolveDestTableName(destination)).insert(migratedItems);
+    await dbV4(resolveDestTableName(destination)).insert(
+      migratedItems.filter((i) => typeof i.key !== 'undefined')
+    );
   }
 
   await resetTableSequence(destination);
