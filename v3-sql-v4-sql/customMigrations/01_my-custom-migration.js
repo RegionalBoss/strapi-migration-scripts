@@ -32,8 +32,6 @@ async function migrateTables() {
         created_by_id: item.created_by,
         updated_by_id: item.updated_by,
       };
-      delete newItem.created_by;
-      delete newItem.updated_by;
 
       if (table.destination === 'deploy-statuses') {
         if (item.deploy) {
