@@ -101,7 +101,7 @@ async function migrate() {
       const newSeq = await dbV4.raw(
         `SELECT * FROM information_schema.sequences WHERE sequence_name = '${newSeqName}'`
       );
-      const oldSeqData = await dbV3.raw(`SELECT x.* FROM public."${newSeqName}" x`);
+      const oldSeqData = await dbV3.raw(`SELECT x.* FROM public."${oldSeq.sequence_name}" x`);
       if (newSeq.rows.length) {
         const restartValue =
           (isNaN(oldSeqData.rows[0].last_value) ? 1 : parseInt(oldSeqData.rows[0].last_value)) + 1;
