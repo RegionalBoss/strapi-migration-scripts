@@ -99,13 +99,13 @@ async function migrate() {
       );
       const oldSeqData = await dbV3.raw(`SELECT x.* FROM public."${oldSeq.sequence_name}" x`);
       if (newSeq.rows.length) {
+        const restartValue =
+          (isNaN(oldSeqData.rows[0].last_value) ? 1 : oldSeqData.rows[0].last_value) + 1;
         await dbV4.raw(`
           ALTER SEQUENCE public."${oldSeq.sequence_name}"
-          RESTART ${oldSeqData.rows[0].last_value};
+          RESTART ${restartValue};
         `);
-        console.log(
-          `SEQUENCE ${oldSeq.sequence_name} RESTARTED WITH ${oldSeqData.rows[0].last_value}`
-        );
+        console.log(`SEQUENCE ${oldSeq.sequence_name} RESTARTED WITH ${restartValue}`);
       }
     }
   }
