@@ -95,7 +95,9 @@ async function migrate() {
     );
     for (const oldSeq of response.rows) {
       const newSeqName =
-        oldSeq.sequence_name === 'deployStatus' ? 'deploy-statuses' : oldSeq.sequence_name;
+        oldSeq.sequence_name === 'deployStatus_id_seq'
+          ? 'deploy-statuses_id_seq'
+          : oldSeq.sequence_name;
       const newSeq = await dbV4.raw(
         `SELECT * FROM information_schema.sequences WHERE sequence_name = '${newSeqName}'`
       );
