@@ -25,14 +25,14 @@ async function migrate() {
     if (!process.env.DATABASE_V3_SCHEMA) process.env.DATABASE_V3_SCHEMA = 'public';
     if (!process.env.DATABASE_V4_SCHEMA) process.env.DATABASE_V4_SCHEMA = 'public';
 
-    try {
-      await dbV4.raw('set session_replication_role to replica;');
-    } catch (error) {
-      console.log(
-        'Error setting session_replication_role to replica, you may get foreign key constraint errors'
-      );
-      console.log('Replication role requires specific admin permissions');
-    }
+    // try {
+    //   await dbV4.raw('set session_replication_role to replica;');
+    // } catch (error) {
+    //   console.log(
+    //     'Error setting session_replication_role to replica, you may get foreign key constraint errors'
+    //   );
+    //   console.log('Replication role requires specific admin permissions');
+    // }
   }
 
   if (isMYSQL) {
@@ -72,9 +72,9 @@ async function migrate() {
 
   await migrateModels(tables.filter((table) => !processedTables.includes(table)));
 
-  if (isPGSQL) {
-    await dbV4.raw('set session_replication_role to DEFAULT;');
-  }
+  // if (isPGSQL) {
+  //   await dbV4.raw('set session_replication_role to DEFAULT;');
+  // }
 
   if (isMYSQL) {
     await dbV4.raw('SET FOREIGN_KEY_CHECKS=1;');
