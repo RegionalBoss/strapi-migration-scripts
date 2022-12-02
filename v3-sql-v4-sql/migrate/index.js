@@ -88,6 +88,27 @@ async function migrate() {
   if (isMYSQL) {
     await dbV4.raw('SET FOREIGN_KEY_CHECKS=1;');
   }
+
+  if (isPGSQL) {
+    const response = await dbV3.raw(
+      `SELECT * FROM information_schema.sequences ORDER BY sequence_name`
+    );
+    for (const oldSeq of response.rows) {
+      const newSeq = await dbV4.raw(
+        `SELECT * FROM information_schema.sequences WHERE sequence_name = '${oldSeq.sequence_name}'`
+      );
+      const oldSeqData = await dbV3.raw(`SELECT x.* FROM public."${oldSeq.sequence_name}" x`);
+      if (newSeq.rows.length) {
+        await dbV4.raw(`
+          ALTER SEQUENCE public."${oldSeq.sequence_name}"
+          RESTART ${oldSeqData.rows[0].last_value};
+        `);
+        console.log(
+          `SEQUENCE ${oldSeq.sequence_name} RESTARTED WITH ${oldSeqData.rows[0].last_value}`
+        );
+      }
+    }
+  }
 }
 
 module.exports = {
