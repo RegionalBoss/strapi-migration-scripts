@@ -94,17 +94,19 @@ async function migrate() {
       `SELECT * FROM information_schema.sequences ORDER BY sequence_name`
     );
     for (const oldSeq of response.rows) {
+      const newSeqName =
+        oldSeq.sequence_name === 'deployStatus' ? 'deploy-statuses' : oldSeq.sequence_name;
       const newSeq = await dbV4.raw(
-        `SELECT * FROM information_schema.sequences WHERE sequence_name = '${oldSeq.sequence_name}'`
+        `SELECT * FROM information_schema.sequences WHERE sequence_name = '${newSeqName}'`
       );
-      const oldSeqData = await dbV3.raw(`SELECT x.* FROM public."${oldSeq.sequence_name}" x`);
+      const oldSeqData = await dbV3.raw(`SELECT x.* FROM public."${newSeqName}" x`);
       if (newSeq.rows.length) {
         const restartValue =
           (isNaN(oldSeqData.rows[0].last_value) ? 1 : parseInt(oldSeqData.rows[0].last_value)) + 1;
         await dbV4.raw(`
-          SELECT setval('public."${oldSeq.sequence_name}"', ${restartValue}, true);
+          SELECT setval('public."${newSeqName}"', ${restartValue}, true);
         `);
-        console.log(`SEQUENCE ${oldSeq.sequence_name} RESTARTED WITH ${restartValue}`);
+        console.log(`SEQUENCE ${newSeqName} RESTARTED WITH ${restartValue}`);
       }
     }
   }
