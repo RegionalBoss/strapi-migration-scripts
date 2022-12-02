@@ -19,8 +19,6 @@ const migrations = [
   migrateFiles,
 ];
 
-const preModels = ['common_configs', 'common_configs__most_common_faq'];
-
 async function migrate() {
   if (isPGSQL) {
     // Default to public if no schema is defined
@@ -67,11 +65,6 @@ async function migrate() {
   }
 
   const unprocessedTables = tables.filter((table) => !processedTables.includes(table));
-
-  if (preModels.length) {
-    await migrateModels(preModels);
-    processedTables.push(...preModels);
-  }
 
   await migrateComponents.migrateTables(unprocessedTables);
 
