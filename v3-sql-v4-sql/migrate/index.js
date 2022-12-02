@@ -102,7 +102,7 @@ async function migrate() {
         const restartValue =
           (isNaN(oldSeqData.rows[0].last_value) ? 1 : parseInt(oldSeqData.rows[0].last_value)) + 1;
         await dbV4.raw(`
-          SELECT setval('${oldSeq.sequence_name}', ${restartValue}, true);
+          SELECT setval("'${oldSeq.sequence_name}'", ${restartValue}, true);
         `);
         console.log(`SEQUENCE ${oldSeq.sequence_name} RESTARTED WITH ${restartValue}`);
       }
