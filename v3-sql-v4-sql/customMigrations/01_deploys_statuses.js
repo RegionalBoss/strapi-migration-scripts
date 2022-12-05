@@ -13,6 +13,22 @@ const tables = [
     source: 'deployStatus',
     destination: 'deploy-statuses',
   },
+  {
+    source: 'wscPostpaid',
+    destination: 'wsc-postpaid',
+  },
+  {
+    source: 'wscPostpaid_components',
+    destination: 'wsc-postpaid_components',
+  },
+  {
+    source: 'wscPrepaid',
+    destination: 'wsc-prepaid',
+  },
+  {
+    source: 'wscPrepaid_components',
+    destination: 'wsc-prepaid_components',
+  },
 ];
 
 const LINKS_TABLE = 'deploy_statuses_deploy_links';

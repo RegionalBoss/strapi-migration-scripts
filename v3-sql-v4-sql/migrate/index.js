@@ -19,6 +19,14 @@ const migrations = [
   migrateFiles,
 ];
 
+const SEQ_NAMES_CHANGES = {
+  deployStatus_id_seq: 'deploy_status_id_seq',
+  wscPostpaid_id_seq: 'wsc-postpaid_id_seq',
+  wscPostpaid_components_id_seq: 'wsc-postpaid_components_id_seq',
+  wscPrepaid_id_seq: 'wsc-prepaid_id_seq',
+  wscPrepaid_components_id_seq: 'wsc-prepaid_components_id_seq',
+};
+
 // const preModels = ['common_configs', 'common_configs__most_common_faq'];
 
 async function migrate() {
@@ -93,11 +101,13 @@ async function migrate() {
     const response = await dbV3.raw(
       `SELECT * FROM information_schema.sequences ORDER BY sequence_name`
     );
+
     for (const oldSeq of response.rows) {
       const newSeqName =
-        oldSeq.sequence_name === 'deployStatus_id_seq'
-          ? 'deploy-statuses_id_seq'
+        typeof SEQ_NAMES_CHANGES[oldSeq.sequence_name] !== 'undefined'
+          ? SEQ_NAMES_CHANGES[oldSeq.sequence_name]
           : oldSeq.sequence_name;
+
       const newSeq = await dbV4.raw(
         `SELECT * FROM information_schema.sequences WHERE sequence_name = '${newSeqName}'`
       );
