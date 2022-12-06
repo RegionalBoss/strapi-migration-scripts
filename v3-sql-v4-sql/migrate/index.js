@@ -121,6 +121,11 @@ async function migrate() {
         console.log(`SEQUENCE ${newSeqName} RESTARTED WITH ${restartValue}`);
       }
     }
+
+    console.log(
+      'UNPROCESSED TABLES',
+      tables.filter((table) => !processedTables.includes(table))
+    );
   }
 }
 

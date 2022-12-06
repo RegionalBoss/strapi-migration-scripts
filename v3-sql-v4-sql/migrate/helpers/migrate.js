@@ -143,9 +143,22 @@ async function migrate(source, destination, itemMapper = undefined) {
 
       return filteredItems;
     });
-
     if (migratedItems.length > 0) {
-      await dbV4(resolveDestTableName(destination)).insert(migratedItems);
+      await dbV4(resolveDestTableName(destination)).insert(
+        source === 'components_page_components_collapse_faqs__faqs'
+          ? migratedItems.reduce(
+              (prev, curr) => [
+                ...prev,
+                ...(prev.find(
+                  (p) => p.collapse_faq_id === curr.collapse_faq_id && p.faq_id === curr.faq_id
+                )
+                  ? []
+                  : [curr]),
+              ],
+              []
+            )
+          : migratedItems
+      );
     }
   }
 
