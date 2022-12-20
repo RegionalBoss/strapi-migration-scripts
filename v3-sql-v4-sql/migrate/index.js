@@ -1,5 +1,5 @@
 const { dbV3, dbV4, isPGSQL, isSQLITE, isMYSQL } = require('../config/database');
-const { migrateCustom } = require('./migrateCustom');
+const { migrateCustom, migrateCustomAfterModels } = require('./migrateCustom');
 const { migrateAdmin } = require('./migrateAdmin');
 const { migrateCoreStore } = require('./migrateCoreStore');
 const { migrateModels } = require('./migrateModels');
@@ -87,6 +87,9 @@ async function migrate() {
   processedTables.push(...migrateComponents.processedTables);
 
   await migrateModels(tables.filter((table) => !processedTables.includes(table)));
+
+  await migrateCustomAfterModels.migrateAfterModels();
+  processedTables.push(...migrateCustomAfterModels.processedTables);
 
   if (isPGSQL) {
     await dbV4.raw('set session_replication_role to DEFAULT;');

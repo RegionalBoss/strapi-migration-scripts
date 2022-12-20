@@ -22,8 +22,17 @@ files.forEach((file) => {
 
 // Custom migration function, handles DB reads and writes
 async function migrateTables() {
-  for (const customMigration of customMigrations) {
+  for (const customMigration of customMigrations.filter((m) => !m.modelRelation)) {
     console.log('Migration custom ', customMigration.name);
+
+    await customMigration.migrateTables();
+    processedTables.push(...customMigration.processedTables);
+  }
+}
+
+async function migrateAfterModels() {
+  for (const customMigration of customMigrations.filter((m) => m.modelRelation)) {
+    console.log('Migration custom after models', customMigration.name);
 
     await customMigration.migrateTables();
     processedTables.push(...customMigration.processedTables);
@@ -35,6 +44,12 @@ const migrateCustom = {
   migrateTables,
 };
 
+const migrateCustomAfterModels = {
+  processedTables,
+  migrateAfterModels,
+};
+
 module.exports = {
   migrateCustom,
+  migrateCustomAfterModels,
 };
