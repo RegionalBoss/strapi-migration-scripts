@@ -76,6 +76,20 @@ const tables = [
       },
     },
   },
+  {
+    source: {
+      name: 'components_map_rates__currencies',
+      cols: ['id', 'components_map_rate_id', 'currency_id'],
+    },
+    destination: {
+      name: 'components_map_rates_currencies_links',
+      cols: {
+        id: 'id',
+        map_rates_id: 'components_map_rate_id',
+        currency_id: 'currency_id',
+      },
+    },
+  },
 ];
 
 const processedTables = tables.map((table) => table.source.name);
