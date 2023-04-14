@@ -87,6 +87,7 @@ async function migrateTables(tables) {
             value,
             collectionName: componentDefinitionObject.collectionName,
             uid: componentDefinitionObject.uid,
+            isComponent: true
           },
           relations
         );
@@ -94,7 +95,7 @@ async function migrateTables(tables) {
       }
     }
 
-    await migrate(table, table, (data) => {
+    await migrate(table, table.toLowerCase(), (data) => {
       const omitedData = omit(data, omitAttributes);
 
       return migrateItem(omitedData);
@@ -119,7 +120,7 @@ async function migrateTables(tables) {
 
     const tableIdColumn = singular(tableName);
 
-    await migrate(table, table, (item) => {
+    await migrate(table, table.toLowerCase(), (item) => {
       const itemNew = {
         ...item,
         entity_id: item[`${tableIdColumn}_id`],
